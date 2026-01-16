@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紹介カード練習</title>
+    <style>
+        /*画面全体の背景色*/
+        body{
+            background-color: #f5f5f5;
+            display: flex; /*真ん中に寄せる*/
+            justify-content: center; /*中身を横方向の真ん中に寄せる*/
+            align-items: center; /*中身を縦方向の真ん中に寄せる*/
+            height: 100vh; /*画面いっぱいの高さを確保*/
+            margin: 0; /*外側の余白*/
+        }
+        /*カード本体のデザイン*/
+        .card{
+            background-color: white;
+            width: 300px;
+            padding: 20px; /*内側の余白*/
+            border-radius: 15px; /*境界線*/
+            box-shadow: 0 10px 20px rgba(0,0,0,0,1);
+            text-align: center;
+            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+            border: 2px solid #ddd;
+        }
+
+        /*タイトルの色と大きさ*/
+        h1{
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /*説明文のスタイル*/
+        p{
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fuwafuwa{
+            0%{ transform: rotateY('0');}
+            50%{ transform: translateY(-10px);} /*真ん中で10px上に*/
+            100%{ transform: translateY(0);} /*最後は元に戻る*/
+        }
+
+        /*ボタンのデザイン*/
+        button{
+            background-color: #ff7f50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            transition: 0.3s; /*変化をなめらかにする*/
+            animation: fuwafuwa 3s infinite ease-in-out; /*3秒かけて無限になめらかに*/
+        }
+    
+
+        /*ボタンにマウスを乗せた時の動き*/
+        button:hover{
+            background-color: #ff4500;
+            transform: scale(1.1) translateY(-5px); /*1.1倍に大きくして、上に5pxひょいっと持ち上げる*/
+            box-shadow: 0 8px 20px rgba(0,0,0,0,2); /*影を強くして浮いている感じ*/
+            animation-play-state: paused; /*マウスを乗せたときはふわふわを止める*/
+        }
+
+        /*ふわふわの台本*/
+        @keyframes fuwafuwa{
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-10px) rotate(0deg); /*少し傾ける*/
+                opacity: 0.8; /*少し透かす*/
+            }
+        }
+
+        .profile-img{
+            width: 100px; /*幅*/
+            height: 100px; /*高さ*/
+            object-fit: cover; /*縦横比を保ったまま*/
+            border-radius: 50%; /*角を丸めて「正円」にする*/
+            border: 3px solid #eee; /*薄い枠線をつける*/
+            margin-bottom: 15px; /*下の文字と隙間を作る*/
+        }
+
+        /*idのときは#を使う*/
+        #days-left{
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff4500;
+            margin: 0 5px;
+        }
+
+        .countdown{
+            background-color: #fffaf0;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        #message-display{
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ff6347;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="sunking.jpg" alt="プロフィール画像" class="profile-img">
+        <h1>プロフィール</h1>
+        <p>太陽系ヒーロー<br>ヒーロー名：サンキング<br>個性：太陽のカケラを操れる</p>
+        <button onclick="showAppreciation()">Plus Ultra</button>
+        <p id="message-display"></p>
+        <div class="countdown">
+            <p>放送日まであと <span id="days-left">??</span> 日</p>
+        </div>
+    </div>
+</body>
+<script>
+    function showAppreciation(){
+        //1.メッセージのリスト配列を作る
+        const messages = [
+            "君が救けを求める顔をしてた",
+            "「頑張れ!!」って感じのデクだ!!",
+            "君の！力じゃないか!!",
+            "ヒーローは!!命を賭してキレイ事実践するお仕事だ!",
+            "君はヒーローになれる",
+            "もう大丈夫、私が来た！",
+            "救けて勝つ、勝って救ける。最高のヒーローになれるんだ",
+            "俺はオールマイトが勝つ姿に憧れた",
+            "元気とユーモアの社会に明るい未来はやって来ない",
+            "ここを彼のヒーローアカデミアでいさせてください",
+        ];
+
+        //2.ランダムに1つ選ぶ
+        const randomIndex = Math.floor(Math.random() * messages.length);
+        const selectedMessage = messages[randomIndex];
+
+        //3.画面に表示する
+        document.getElementById('message-display').innerText = selectedMessage;
+    }
+    function updateCountdown(){
+        //1.設定:放送日の日付(例:2026年5月2日)
+        const targetDate = new Date('2026-05-02');
+        //2.現在:今日の日付
+        const today = new Date();
+
+        //3.計算:引き算をして「ミリ秒」を「日」に直す
+        const diff = targetDate - today;
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+        //4.反映:HTMLの??の部分を計算結果で書き換える
+        document.getElementById('days-left').innerText = days;
+    }
+
+    //ページを開いたときに実行
+    updateCountdown();
+</script>
+</html>
