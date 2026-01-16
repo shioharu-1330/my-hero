@@ -6,17 +6,20 @@
     <title>紹介カード練習</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap&family=Zen+Maru+Gothic" rel="stylesheet">
     <style>
         /*画面全体の背景色*/
         body{
-            font-family: 'M PLUS Rounded 1c', sans-serif !important;
+            font-family: M PLUS Rounded 1c, Zen Maru Gothic, sans-serif !important;
             background-color: #f5f5f5;
             display: flex; /*真ん中に寄せる*/
-            justify-content: center; /*中身を横方向の真ん中に寄せる*/
+            flex-direction: column; /*中身を縦に並べる*/
+            /*justify-content: center; 中身を横方向の真ん中に寄せる*/
             align-items: center; /*中身を縦方向の真ん中に寄せる*/
-            height: 100vh; /*画面いっぱいの高さを確保*/
+            min-height: 100vh; /*最低でも画面いっぱいの高さ、越えてもOK*/
+            /*height: 100vh; 画面いっぱいの高さを確保*/
             margin: 0; /*外側の余白*/
+            padding: 20px; /*上下に少し余白を作る*/
         }
         /*カード本体のデザイン*/
         .card{
@@ -169,4 +172,3 @@
     updateCountdown();
 </script>
 </html>
-
