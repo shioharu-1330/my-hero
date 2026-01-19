@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>紹介カード練習</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap&family=Zen+Maru+Gothic" rel="stylesheet">
     <style>
         /*画面全体の背景色*/
         body{
-            font-family: M PLUS Rounded 1c, Zen Maru Gothic, sans-serif !important;
+            font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif !important;
+            /*font-weight: 700;*/
             background-color: #f5f5f5;
             display: flex; /*真ん中に寄せる*/
             flex-direction: column; /*中身を縦に並べる*/
@@ -25,12 +24,12 @@
         .card{
             background-color: white;
             width: 300px;
-            padding: 20px; /*内側の余白*/
+            padding: 30px; /*内側の余白*/
             border-radius: 15px; /*境界線*/
-            box-shadow: 0 10px 20px rgba(0,0,0,0,1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0,1);
             text-align: center;
-            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-            border: 2px solid #ddd;
+            /*font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;*/
+            /*border: 2px solid #ddd;*/
         }
 
         /*タイトルの色と大きさ*/
@@ -133,6 +132,31 @@
             font-weight: bold;
             color: #333;
         }
+
+        .heart{
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            animation-timing-function: ease-out;
+            animation: fltUp 1.5s linear forwards;
+            z-index: 1000;
+            transition: transform 0.2s ease-out;
+            text-shadow: 0 0 10px rgba(255, 100, 100, 0.5); /* ハートを少し光らせる */
+        }
+
+        @keyframes flyUp{
+            0% {
+                bottom: -10%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -164,10 +188,21 @@
 
             //簡易的な天気判定
             let weatherDesc = "晴れ🌞";
-            if(weatherCode > 0) weatherDesc = "くもり☁";
-            if(weatherCode > 60) weatherDesc = "雨☔";
+            let bgColor = "#fff9e6"
+            
+            if(weatherCode >= 1 && weatherCode <= 3){
+                weatherDesc = "晴れ/くもり🌤";
+                bgColor = "#f0f8ff";
+            }else if(weatherCode >= 45){
+                weatherDesc = "霧・くもり☁";
+                bgColor = "#f5f5f5";
+            }else if(weatherCode >= 51){
+                weatherDesc = "雨☔";
+                bgColor = "#e0e7ff";
+            }
 
             document.getElementById('weather-text').innerText = `${weatherDesc} ${temp}℃`;
+            document.body.style.backgroundColor = bgColor;
         }catch(error){
             document.getElementById('weather-text').innerText = "取得失敗";
         }
@@ -196,6 +231,48 @@
 
         //3.画面に表示する
         document.getElementById('message-display').innerText = selectedMessage;
+
+        //ハートを複数個同時に作る
+        for(let i = 0; i < 50; i++){
+            setTimeout(() => {
+                createHeart();
+            }, i * 100);
+        }
+
+        function createHeart(){
+            //ハートの追加
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '✨';
+
+        //出現位置をランダムにばらけさせる
+        const randomLeft = Math.random() * window.innerWidth;
+        heart.style.left = randomLeft + 'px';
+        //heart.style.bottom = '50%';
+
+        heart.style.bottom = '-10%'; 
+
+        // 【重要】CSSのアニメーションを適用
+        heart.style.position = 'fixed';
+        heart.style.bottom = '-10%'; // スタート位置
+        heart.style.animationName = 'flyUp'; // CSSの@keyframesを呼び出す
+        heart.style.animationTimingFunction = 'ease-out';
+        heart.style.transform = 'translateX(-50%)';
+
+
+        //ハートの大きさもランダムに変える
+        const randomSize = Math.random() * 1 + 1;
+        heart.style.fontSize = randomSize + 'rem';
+
+        const duration = 2 + Math.random() * 2;
+        heart.style.animationDuration = duration + 's';
+
+        document.body.appendChild(heart);
+
+        //1.5秒後にハートを消す
+        setTimeout(() => {heart.remove(); }, duration * 1000);
+        }
+        
     }
     function updateCountdown(){
         //1.設定:放送日の日付(例:2026年5月2日)
@@ -212,6 +289,9 @@
     }
 
     //ページを開いたときに実行
-    updateCountdown();
+    window.onload = function(){
+        getWeather();
+        updateCountdown();
+    };
 </script>
 </html>
